@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách công việc (Tasks)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div th:if="${message}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <span th:text="${message}" class="fw-bold"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <h2 class="mb-4">Danh sách công việc TASK</h2>
+
+        <div class="mb-3 d-flex gap-2">
+            <a th:href="@{/tasks/create}" class="btn btn-primary">➕ Tạo mới</a>
+            <button type="submit" form="bulkForm" class="btn btn-danger d-none" id="btnBulkDelete">
+                🗑️ Xóa mục đã chọn
+            </button>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-body py-3">
+                <form th:action="@{/tasks}" method="get">
+
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-3">
+                            <input type="text" name="keyword" class="form-control" placeholder="Tìm tên công việc..."
+                                th:value="${keyword}">
+                        </div>
+
+                        <div class="col-md-2">
+                            <select name="status" class="form-select">
+                                <option value="">- Trạng thái -</option>
+                                <option th:each="st : ${statuses}" th:value="${st.name()}" th:text="${st.name()}"
+                                    th:selected="${st == currentStatus}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select name="assigneeId" class="form-select">
+                                <option value="">- Người phụ trách -</option>
+                                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.fullName}"
+                                    th:selected="${user.id == currentAssignee}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-5 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">🔍 Tìm</button>
+                            <a th:href="@{/tasks}" class="btn btn-outline-secondary">Xóa lọc</a>
+
+                            <button class="btn btn-outline-info" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#advancedFilterArea">
+                                ⚙️ Lọc nâng cao
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="collapse mt-3 pt-3 border-top" id="advancedFilterArea"
+                        th:classappend="${hasAdvancedFilter ? 'show' : ''}">
+                        <div class="row g-2">
+
+                            <div class="col-md-2">
+                                <label class="form-label text-muted small mb-1">Mức độ ưu tiên</label>
+                                <select name="priority" class="form-select form-select-sm">
+                                    <option value="">Tất cả</option>
+                                    <option th:each="pr : ${priorities}" th:value="${pr.name()}" th:text="${pr.name()}"
+                                        th:selected="${pr == currentPriority}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label text-muted small mb-1">Thời gian nhanh</label>
+                                <select id="quickDatePreset" class="form-select form-select-sm">
+                                    <option value="">-- Tùy chọn --</option>
+                                    <option value="today">Hôm nay</option>
+                                    <option value="this_week">Tuần này</option>
+                                    <option value="this_month">Tháng này</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label text-muted small mb-1">Từ ngày</label>
+                                <input type="date" id="fromDateInput" name="fromDate"
+                                    class="form-control form-control-sm" th:value="${fromDate}">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label text-muted small mb-1">Đến ngày</label>
+                                <input type="date" id="toDateInput" name="toDate" class="form-control form-control-sm"
+                                    th:value="${toDate}">
+                            </div>
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <form th:action="@{/tasks/bulk-delete}" method="post" id="bulkForm"
+            onsubmit="return confirm('Xóa tất cả các mục đã chọn?');">
+
+            <table class="table table-bordered table-hover shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-center" style="width: 40px;">
+                            <input class="form-check-input" type="checkbox" id="selectAll">
+                        </th>
+                        <th style="width: 35%;">Chủ đề</th>
+                        <th>Tình trạng</th>
+                        <th>Khách hàng</th>
+                        <th>Liên quan đến</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Hạn chót</th>
+                        <th>Chỉ định</th>
+                        <th class="text-center">🔍</th>
+                    </tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="task : ${taskList}">
+                        <td class="text-center align-middle">
+                            <input class="form-check-input task-checkbox" type="checkbox" name="ids"
+                                th:value="${task.id}">
+                        </td>
+                        <td class="fw-bold text-wrap text-break" style="max-width: 0;" th:text="${task.subject}"></td>
+
+                        <td>
+                            <span class="badge"
+                                th:classappend="${task.status.name() == 'COMPLETED' ? 'bg-success' : 'bg-warning text-dark'}"
+                                th:text="${task.status}"></span>
+                        </td>
+
+                        <td th:text="${task.contact?.fullName}"></td>
+
+                        <td>
+                            <div th:if="${task.relatedToType != null}">
+                                <small class="text-muted" th:text="${task.relatedToType}"></small>:
+                                <span th:if="${task.relatedObjectName != null}" class="badge bg-info text-dark"
+                                    th:text="${task.relatedObjectName}">
+                                </span>
+                                <span th:unless="${task.relatedObjectName != null}" class="text-muted">-</span>
+
+                            </div>
+                            <span th:unless="${task.relatedToType != null}" class="text-muted">-</span>
+                        </td>
+
+                        <td
+                            th:text="${task.startDate != null ? #temporals.format(task.startDate, 'dd-MM-yyyy HH:mm') : '-'}">
+                        </td>
+
+                        <td class="text-danger fw-bold"
+                            th:text="${#temporals.format(task.dueDate, 'dd-MM-yyyy HH:mm')}">
+                        </td>
+
+                        <td th:text="${task.assignedTo?.fullName}"></td>
+                        <td class="text-center align-middle">
+                            <a th:href="@{/tasks/view/{id}(id=${task.id})}"
+                                class="btn btn-sm btn-outline-info rounded-circle fw-bold" title="Xem chi tiết">
+                                i
+                            </a>
+                        </td>
+                    </tr>
+
+
+                    <tr th:if="${#lists.isEmpty(taskList)}">
+                        <td colspan="7" class="text-center text-muted">Chưa có công việc nào.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectAll = document.getElementById("selectAll");
+            const checkboxes = document.querySelectorAll(".task-checkbox");
+            const btnBulkDelete = document.getElementById("btnBulkDelete");
+
+            // Hàm kiểm tra để ẩn/hiện nút Xóa
+            function toggleBulkButton() {
+                const checkedCount = document.querySelectorAll(".task-checkbox:checked").length;
+                if (checkedCount > 0) {
+                    btnBulkDelete.classList.remove("d-none"); // Hiện nút
+                } else {
+                    btnBulkDelete.classList.add("d-none");    // Ẩn nút
+                }
+            }
+
+            // Bắt sự kiện chọn "Tất cả"
+            if (selectAll) {
+                selectAll.addEventListener("change", function () {
+                    checkboxes.forEach(cb => cb.checked = selectAll.checked);
+                    toggleBulkButton();
+                });
+            }
+
+            // Bắt sự kiện chọn từng ô
+            checkboxes.forEach(cb => {
+                cb.addEventListener("change", function () {
+                    // Nếu bỏ tick 1 ô thì ô "Select All" cũng phải bỏ tick
+                    if (!this.checked) selectAll.checked = false;
+                    toggleBulkButton();
+                });
+            });
+        });
+        // Bắt sự kiện khi chọn "Kỳ thời gian"
+        const quickDatePreset = document.getElementById('quickDatePreset');
+        if (quickDatePreset) {
+            quickDatePreset.addEventListener('change', function () {
+                const fromInput = document.getElementById('fromDateInput');
+                const toInput = document.getElementById('toDateInput');
+
+                if (!this.value) return; // Nếu chọn "-- Tùy chọn --" thì không làm gì cả
+
+                const today = new Date();
+                let fromDate, toDate;
+
+                // Hàm format ngày thành YYYY-MM-DD để nhét vào thẻ input type="date"
+                const formatDate = (d) => {
+                    return d.getFullYear() + '-' +
+                        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(d.getDate()).padStart(2, '0');
+                };
+
+                if (this.value === 'today') {
+                    fromDate = today;
+                    toDate = today;
+                }
+                else if (this.value === 'this_week') {
+                    // Lùi về thứ 2 (chú ý: getDay() của JS Chủ nhật là 0)
+                    const day = today.getDay();
+                    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+                    fromDate = new Date(today.setDate(diff));
+                    toDate = new Date(today.setDate(diff + 6)); // Cộng 6 ngày ra Chủ nhật
+                }
+                else if (this.value === 'this_month') {
+                    // Ngày 1 của tháng hiện tại
+                    fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    // Ngày cuối của tháng hiện tại (truyền ngày 0 của tháng sau)
+                    toDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                }
+
+                // Đổ dữ liệu vào 2 ô input
+                fromInput.value = formatDate(fromDate);
+                toInput.value = formatDate(toDate);
+            });
+        }
+    </script>
+</body>
+
+</html>
