@@ -54,11 +54,6 @@ public class Customer {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    /* * 💡 LƯU Ý VỀ KHÓA NGOẠI:
-     * Tạm thời mình map các cột này là Long để bạn không bị lỗi thiếu Class.
-     * Sau này khi bạn tạo đủ các class Source, Status, Tier, 
-     * bạn hãy đổi nó thành @ManyToOne giống như assignedTo nhé!
-     */
     @Column(name = "source_id")
     private Long sourceId;
 
