@@ -33,4 +33,11 @@ Mở dự án(demomvc) bằng VS Code
 Tìm đến file src/main/resources/application.properties
 Chỉnh sửa thông tin kết nối MySQL theo thông số máy cá nhân của bạn:
 ![alt text](image.png)
-
+*B5: Cài đặt thư viện & Biên dịch (Build)
+Mở Terminal của VS Code (Ctrl + ~) và chạy lệnh Maven để tải thư viện và đóng gói dự án: mvn clean install
+*B6: Khởi chạy ứng dụng (Running)
+Có 2 cách để khởi động server:
+Cách 1 (Dòng lệnh): Gõ mvn spring-boot:run vào Terminal.
+Cách 2 (VS Code UI): Bấm vào biểu tượng Spring Boot Dashboard ở thanh sidebar bên trái, chọn dự án và bấm nút Play (Run).
+Sau khi thấy dòng chữ Started DemoMvcApplication in ... seconds trên màn hình Console, bạn hãy truy cập vào các đường dẫn sau trên trình duyệt:
+Quản lý Công việc: http://localhost:8080/tasks
