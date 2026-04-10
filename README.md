@@ -12,7 +12,7 @@
 * Xóa hàng loạt (Bulk Delete): Hỗ trợ chọn nhiều bản ghi cùng lúc để tối ưu hóa thao tác người dùng.
 
 ## Công nghệ sử dụng
-* Backend: Java 17, Spring Boot 4.0.5, Spring Data JPA, Hibernate.
+* Backend: Java 17, Spring Boot 3.2.4, Spring Data JPA, Hibernate.
 
 * Frontend: HTML5, Thymeleaf, Bootstrap 5, JavaScript (Vanilla JS).
 
@@ -34,7 +34,7 @@ Language Support for Java™ by Red Hat, Debugger for Java
 Spring Boot Tools, Spring Initializr Java Support, Spring Boot Dashboard
 * Java Development Kit (JDK): Phiên bản 17 trở lên.
 * Build Tool: Maven.
-* MySQL Server: Phiên bản 9.1.0
+* MySQL Server (Phiên bản 9.1.0) kèm theo công cụ quản lý giao diện (như MySQL Workbench, DBeaver hoặc XAMPP).
 # Bước 3: Cấu hình Cơ sở dữ liệu (Database Setup)
 
 Truy cập vào MySQL Workbench hoặc phpMyAdmin.
