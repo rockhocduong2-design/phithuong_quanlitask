@@ -1,43 +1,60 @@
-# 1 module trong hệ thống CRM - Module Quản lý Công việc(TASK)
+# Hệ thống CRM - Phân hệ Quản lý Công việc (TASK)
+* Phân hệ này tập trung vào việc số hóa quy trình giao việc (Task Management), giúp tối ưu hóa việc theo dõi và triển khai công việc trong doanh nghiệp.
 
-# Tập trung vào việc số hóa quy trình giao việc (Task Management). 
-# Các tính năng nổi bật (Key Features):
-### 1. Quản lý Công việc (Task Management)
-* **CRUD cơ bản:** Tạo mới, xem chi tiết, cập nhật và xóa công việc.
+## Các tính năng nổi bật
+### Quản lý Công việc (Task Management)
+* CRUD cơ bản: Thực hiện các thao tác Tạo mới, Xem chi tiết, Cập nhật và Xóa công việc.
 
+* Quản lý trạng thái: Theo dõi chặt chẽ các giai đoạn từ Chưa bắt đầu, Đang tiến hành đến Hoàn thành.
 
-# Công nghệ sử dụng (Tech Stack)
+* Hệ thống lọc nâng cao: Cho phép tìm kiếm công việc theo từ khóa, trạng thái, người phụ trách và khoảng thời gian (Từ ngày, Đến ngày).
 
-* **Backend:** Java 17, Spring Boot 4.0.5, Spring Data JPA, Hibernate.
-* **Frontend:** HTML5, Thymeleaf, Bootstrap 5, JavaScript.
-* **Database:** MySQL 9.1.0 (Tối ưu hóa Index B-Tree).
-* **Công cụ khác:** Maven, VS Code.
+* Xóa hàng loạt (Bulk Delete): Hỗ trợ chọn nhiều bản ghi cùng lúc để tối ưu hóa thao tác người dùng.
 
+## Công nghệ sử dụng
+* Backend: Java 17, Spring Boot 4.0.5, Spring Data JPA, Hibernate.
 
-##  Hướng dẫn Cài đặt & Chạy dự án (Setup Instructions):
+* Frontend: HTML5, Thymeleaf, Bootstrap 5, JavaScript (Vanilla JS).
 
-*B1: **Clone dự án:**
-* git clone https://github.com/rockhocduong2-design/phithuong_quanlitask.git
-*B2: **Chuẩn bị môi trường (Prerequisites)**
-Trước khi bắt đầu, hãy đảm bảo máy tính đã cài đặt:
+* Database: MySQL 9.1.0 (Sử dụng B-Tree Index để tối ưu hóa tốc độ truy vấn).
+
+*  Công cụ quản lý: Maven, VS Code.
+
+## Hướng dẫn Cài đặt và Khởi chạy 
+* Bước 1: Sao chép mã nguồn (Clone)
+Sử dụng lệnh sau trong Terminal để tải dự án:
+
+''' git clone https://github.com/rockhocduong2-design/phithuong_quanlitask.git '''
+* Bước 2: Chuẩn bị môi trường (Prerequisites)
+Yêu cầu hệ thống phải được cài đặt sẵn:
+
 Java Development Kit (JDK): Phiên bản 17 trở lên.
-Cơ sở dữ liệu: MySQL Server(9.1.0)
-Công cụ lập trình: VS Code 
-Quản lý thư viện: Maven
-*B3: Cấu hình Cơ sở dữ liệu (Database Setup)
-Khởi tạo Database:
-Mở MySQL Workbench hoặc phpMyAdmin
-Dùng tính năng Import để nạp file db_crm.sql (nằm trong thư mục /database của dự án) để có sẵn các bảng users, tasks, activities và dữ liệu mẫu.
-*B4: Cấu hình dự án (Project Configuration)
-Mở dự án(demomvc) bằng VS Code
-Tìm đến file src/main/resources/application.properties
-Chỉnh sửa thông tin kết nối MySQL theo thông số máy cá nhân của bạn:
+MySQL Server: Phiên bản 9.1.0
+Build Tool: Maven.
+
+* Bước 3: Cấu hình Cơ sở dữ liệu (Database Setup)
+Truy cập vào MySQL Workbench hoặc phpMyAdmin.
+Nạp dữ liệu từ file db_crm.sql (nằm trong thư mục /database của dự án) để khởi tạo cấu trúc bảng và dữ liệu mẫu.
+
+* Bước 4: Cấu hình ứng dụng (Project Configuration)
+Mở thư mục demomvc bằng VS Code.
+Mở file src/main/resources/application.properties.
+Chỉnh sửa các thông số kết nối sau để phù hợp với máy cá nhân:
+
+spring.datasource.url: jdbc:mysql://localhost:3306/db_crm
+spring.datasource.username: [Tên người dùng MySQL]
+spring.datasource.password: [Mật khẩu MySQL]
 ![alt text](image.png)
-*B5: Cài đặt thư viện & Biên dịch (Build)
-Mở Terminal của VS Code (Ctrl + ~) và chạy lệnh Maven để tải thư viện và đóng gói dự án: mvn clean install
-*B6: Khởi chạy ứng dụng (Running)
-Có 2 cách để khởi động server:
-Cách 1 (Dòng lệnh): Gõ mvn spring-boot:run vào Terminal.
-Cách 2 (VS Code UI): Bấm vào biểu tượng Spring Boot Dashboard ở thanh sidebar bên trái, chọn dự án và bấm nút Play (Run).
-Sau khi thấy dòng chữ Started DemoMvcApplication in ... seconds trên màn hình Console, bạn hãy truy cập vào các đường dẫn sau trên trình duyệt:
-Quản lý Công việc: http://localhost:8080/tasks
+
+* Bước 5: Biên dịch dự án (Build)
+Mở Terminal tại thư mục gốc của dự án và chạy lệnh:
+
+'''mvn clean install'''
+* Bước 6: Khởi chạy ứng dụng (Running)
+~ Cách 1: Chạy lệnh mvn spring-boot:run trực tiếp từ Terminal.
+
+~ Cách 2: Sử dụng Spring Boot Dashboard có sẵn trên VS Code để kích hoạt project.
+
+* Sau khi server khởi động thành công, truy cập các địa chỉ sau trên trình duyệt:
+
+> Quản lý Công việc: http://localhost:8080/tasks
